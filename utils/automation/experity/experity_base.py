@@ -450,7 +450,7 @@ class ExperityBase:
                 csv_link = menu.locator(f"a[title='{report_locator_title[report_format]}']")
                 csv_link.wait_for(state="visible")
 
-                with popup.expect_download(timeout=1200_000) as download_info:
+                with popup.expect_download(timeout=12_000_000) as download_info:
                     csv_link.click()
                 download = download_info.value
                 file_name += f".{report_format}"

@@ -38,8 +38,6 @@ except Exception as e:
 finally:
     automation.logout()
     automation.close_browser()
-
-
 """
 ("PAY 28", "Expected AR, PAY 28", "January 2022", "January 2026")
 ("PAY 29", "Expected AR, PAY 29", ["January 2022"])
