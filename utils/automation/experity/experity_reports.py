@@ -1,3 +1,4 @@
+import os
 import logging
 
 from utils.auth.otp import TOTPProvider
@@ -58,6 +59,10 @@ class ExperityReports:
 
     def clinic_data(self, file_name: str = "ClinicData.html"):
         try:
+            download_path = os.path.join(self.download_dir, file_name)
+            if os.path.exists(download_path):
+                self.logger.info("File already existing on the disk skipping: %s", download_path)
+                return download_path
             self.experity.navigate_page("clinic")
             self.experity.clinic_data(file_name)
         except Exception as e:
@@ -66,6 +71,10 @@ class ExperityReports:
 
     def report_data(self, file_name: str = "ClinicReport.html"):
         try:
+            download_path = os.path.join(self.download_dir, file_name)
+            if os.path.exists(download_path):
+                self.logger.info("File already existing on the disk skipping: %s", download_path)
+                return download_path
             self.experity.navigate_page("report")
             self.experity.report_data(file_name)
         except Exception as e:
@@ -76,6 +85,12 @@ class ExperityReports:
         try:
             file_name = report_name + "_" + from_date + "_" + to_date
             file_name = file_name.replace(" ", "_").replace("/", "_")
+            download_path = os.path.join(self.download_dir, file_name)
+            csv = download_path + ".csv"
+            excel = download_path + ".xlsx"
+            if os.path.exists(csv) and os.path.exists(excel):
+                self.logger.info("File already existing on the disk skipping: %s", download_path)
+                return download_path
             self.experity.navigate_page("report")
             self.experity.search_report(report_name)
             self.experity.select_report(report_title)
@@ -97,6 +112,12 @@ class ExperityReports:
                 try:
                     file_name = report_name + "_" + month
                     file_name = file_name.replace(" ", "_")
+                    download_path = os.path.join(self.download_dir, file_name)
+                    csv = download_path + ".csv"
+                    excel = download_path + ".xlsx"
+                    if os.path.exists(csv) and os.path.exists(excel):
+                        self.logger.info("File already existing on the disk skipping: %s", download_path)
+                        continue
                     self.experity.select_month(month)
                     page = self.experity.run_report()
                     self.experity.download_report(page, file_name)
@@ -113,6 +134,12 @@ class ExperityReports:
         try:
             file_name = report_name + "_" + from_month_year + "_" + to_month_year
             file_name = file_name.replace(" ", "_")
+            download_path = os.path.join(self.download_dir, file_name)
+            csv = download_path + ".csv"
+            excel = download_path + ".xlsx"
+            if os.path.exists(csv) and os.path.exists(excel):
+                self.logger.info("File already existing on the disk skipping: %s", download_path)
+                return download_path
             self.experity.navigate_page("report")
             self.experity.search_report(report_name)
             self.experity.select_report(report_title)

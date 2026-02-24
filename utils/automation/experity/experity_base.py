@@ -50,13 +50,15 @@ class ExperityBase:
         """
         self.page = page
         self.base_url = None
-        self.current_page = None
         self.download_dir = None
         self.screenshot_dir = None
         self.main_frame: Optional[Frame] = None
         self.nav_frame: Optional[Frame] = None
         self.report_frame: Optional[Frame] = None
         self.logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
+        self.current_page = None
+        self.current_report_search = None
+        self.current_report_select = None
 
     def _time_stamp(self) -> str:
         """
@@ -255,9 +257,12 @@ class ExperityBase:
         :raises Exception: If the search operation fails.
         """
         try:
+            if self.current_report_search == report_name:
+                return
             self.nav_frame.locator("#userSearch").fill(report_name)
             self.nav_frame.locator("#dosearch").click()
             self.logger.info("Searched report: %s", report_name)
+            self.current_report_search = report_name
         except Exception as e:
             self.logger.error("Unable to search report: %s", e)
             raise
@@ -271,11 +276,14 @@ class ExperityBase:
         :raises Exception: If the report cannot be selected.
         """
         try:
+            if self.current_report_select == report_title:
+                return
             self.report_frame.wait_for_load_state("networkidle")
             report_button = self.report_frame.locator("#mainbutton1")
             report_button.locator(f"text={report_title}").wait_for()
             report_button.click()
             self.logger.info("Selected report: %s", report_title)
+            self.current_report_select = report_title
         except Exception as e:
             self.logger.error("Unable to select report: %s", e)
             raise
